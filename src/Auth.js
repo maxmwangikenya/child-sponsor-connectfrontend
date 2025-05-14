@@ -23,6 +23,8 @@ const GoogleLoginButton = () => {
         expiresAt: decoded.exp * 1000 // Convert to milliseconds
       };
       localStorage.setItem('auth', JSON.stringify(authData));
+      localStorage.setItem('token', token)
+      localStorage.setItem('admin', decoded.isAdmin)
       return true;
     } catch (error) {
       console.error('Token storage failed:', error);
@@ -84,7 +86,7 @@ const GoogleLoginButton = () => {
       // 5. Determine appropriate redirect path
       let redirectPath = '/';
       if (tokenStatus.isAdmin) {
-        redirectPath = '/admin/dashboard';
+        redirectPath = '/admin';
       } else if (!tokenStatus.hasProfile) {
         redirectPath = '/complete-profile';
       }
