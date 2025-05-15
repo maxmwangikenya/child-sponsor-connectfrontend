@@ -10,6 +10,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('');
+
 
   // Verify admin status on mount
   useEffect(() => {
@@ -30,35 +32,38 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  const fetchSponsors = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/admin/sponsors', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setSponsors(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchSponsors = async () => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:8000/admin/sponsors', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setSponsors(response.data);
+    setViewMode('sponsors');
+  } catch (err) {
+    setError(err.response?.data?.message || err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const fetchFamilyMembers = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/admin/family-members', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setFamilyMembers(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchFamilyMembers = async () => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:8000/admin/family-members', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setFamilyMembers(response.data);
+    setViewMode('family');
+  } catch (err) {
+    setError(err.response?.data?.message || err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -87,7 +92,7 @@ const AdminDashboard = () => {
 
       {loading ? (
         <div className="loading">Loading data...</div>
-      ) : sponsors.length > 0 ? (
+      ) : viewMode === 'sponsors' && sponsors.length > 0 ? (
         <div className="data-table">
           <h2>Sponsors ({sponsors.length})</h2>
           <table>
@@ -106,14 +111,14 @@ const AdminDashboard = () => {
                   <td>{sponsor.name}</td>
                   <td>{sponsor.email}</td>
                   <td>
-                    {sponsor.family_members?.length || 0}
+                    {sponsor.family_member_count}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      ) : familyMembers.length > 0 ? (
+      ) : viewMode === 'family' && familyMembers.length > 0 ? (
         <div className="data-table">
           <h2>Family Members ({familyMembers.length})</h2>
           <table>
@@ -143,7 +148,7 @@ const AdminDashboard = () => {
         <div className="no-data">No data available. Click buttons above to load data.</div>
       )}
 
-      <style jsx>{`
+      <style jsx="true">{`
         .admin-container {
           max-width: 1200px;
           margin: 0 auto;
