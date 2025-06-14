@@ -4,6 +4,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode as jwt_decode} from 'jwt-decode';
 
+
+
+
 const AdminDashboard = () => {
   const [sponsors, setSponsors] = useState([]);
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -36,7 +39,7 @@ const fetchSponsors = async () => {
   try {
     setLoading(true);
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/admin/sponsors', {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/sponsors`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setSponsors(response.data);
@@ -52,7 +55,7 @@ const fetchFamilyMembers = async () => {
   try {
     setLoading(true);
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/admin/family-members', {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/family-members`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setFamilyMembers(response.data);

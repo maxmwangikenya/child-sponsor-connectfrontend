@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode as jwt_decode} from 'jwt-decode';
-import {admnDashboard}  from './AdmnDashboard'
+import {admnDashboard}  from '../src/AdmnDashboard'
 
 function App() {
   const [activeTab, setActiveTab] = useState('sponsor');
@@ -48,7 +48,7 @@ function App() {
   const handleSponsorSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/sponsors', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/sponsors`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ function App() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/family-members', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/family-members`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
